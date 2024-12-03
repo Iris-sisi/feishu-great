@@ -25,18 +25,20 @@ export const Config: FC<{}> = () => {
     return { text: set.map((l) => l.value.text).join(delimiter) };
   };
 
-  const handleValuesChange = async (newVal: FormParams) => {
+  const handleValuesChange = async (newVal: Partial<FormParams>) => {
     if ('x' in newVal) {
-      const { text } = await resolveData(newVal.x);
+      const { text } = await resolveData(newVal.x!);
       setField({ x: newVal.x, xValue: text });
       form.setFieldValue('xValue', text);
-    }
-    if ('y' in newVal) {
-      const { text } = await resolveData(newVal.y);
+    } else if ('y' in newVal) {
+      const { text } = await resolveData(newVal.y!);
       setField({ y: newVal.y, yValue: text });
       form.setFieldValue('yValue', text);
+    } else if ('tableId' in newVal) {
+      setTableId(newVal.tableId)
+    } else {
+      setField(newVal);
     }
-    setField(newVal);
   };
 
   return (
