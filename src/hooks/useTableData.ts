@@ -16,6 +16,7 @@ export interface FieldBase {
   y: string
   yValue: string
   key: string
+  metric: string[]
 }
 
 export interface FieldData extends Partial<FieldBase> {

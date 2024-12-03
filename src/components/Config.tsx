@@ -2,6 +2,7 @@ import { FC, useContext } from 'react';
 import { Form, Input, Select } from 'antd';
 import { GlobalContext } from '../hooks/useGlobal';
 import { FieldBase } from '../hooks/useTableData';
+import { metricList } from '../utils/const';
 
 export interface FormParams extends FieldBase {
   tableId: string;
@@ -25,9 +26,6 @@ export const Config: FC<{}> = () => {
   };
 
   const handleValuesChange = async (newVal: FormParams) => {
-    if ('tableId' in newVal) {
-      setTableId(newVal.tableId);
-    }
     if ('x' in newVal) {
       const { text } = await resolveData(newVal.x);
       setField({ x: newVal.x, xValue: text });
@@ -38,15 +36,7 @@ export const Config: FC<{}> = () => {
       setField({ y: newVal.y, yValue: text });
       form.setFieldValue('yValue', text);
     }
-    if ('yValue' in newVal) {
-      setField({ yValue: newVal.yValue });
-    }
-    if ('xValue' in newVal) {
-      setField({ xValue: newVal.xValue });
-    }
-    if ('key' in newVal) {
-      setField({ key: newVal.key });
-    }
+    setField(newVal);
   };
 
   return (
@@ -96,15 +86,24 @@ export const Config: FC<{}> = () => {
       )}
 
       {x && y && (
-        <Form.Item label="Select Key" name="key">
-          <Select>
-            {fieldList
-              .filter((item) => ![x, y].includes(item.value))
-              .map((item) => (
+        <>
+          <Form.Item label="Select Key" name="key">
+            <Select>
+              {fieldList
+                .filter((item) => ![x, y].includes(item.value))
+                .map((item) => (
+                  <Select.Option key={item.value}>{item.label}</Select.Option>
+                ))}
+            </Select>
+          </Form.Item>
+          <Form.Item label="" name="metric">
+            <Select mode="multiple">
+              {metricList.map((item) => (
                 <Select.Option key={item.value}>{item.label}</Select.Option>
               ))}
-          </Select>
-        </Form.Item>
+            </Select>
+          </Form.Item>
+        </>
       )}
     </Form>
   );

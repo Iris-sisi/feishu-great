@@ -3,6 +3,7 @@ import { GlobalContext } from '../hooks/useGlobal';
 import { useRect } from '../hooks/useRect';
 import { FieldItem } from '../hooks/useTableData';
 import { useAsyncEffect } from 'ahooks';
+import { METRIC } from '../utils/const';
 
 interface State<T = FieldItem> {
   xList: T[];
@@ -43,16 +44,24 @@ export const Grid = () => {
 
   const renderCell = (x?: string, y?: string) => {
     const { keyList, yList, xList } = state;
+    const { metric } = fieldData;
     if (!keyList) return '';
     const matchX = xList?.filter((k) => k?.value.text === x);
     const matchY = yList?.filter((k) => k?.value.text === y);
     const matchKey = matchX?.filter((k) => matchY?.some((i) => i?.recordId === k?.recordId));
 
-    const text = keyList
+    const list = keyList
       .filter(({ recordId }) => matchKey?.some((v) => v?.recordId === recordId))
-      .map((v) => v.value.text)
+      .map((v) => v.value.text);
+
+    const map = {
+      [METRIC.PERSON]: list.join(delimiter),
+      [METRIC.RATE]: `${((list.length / keyList.length) * 100).toFixed(1)}%`,
+    };
+    return metric
+      ?.map((m) => map[m])
+      .filter(Boolean)
       .join(delimiter);
-    return text;
   };
 
   useEffect(handleResize, [yList]);
@@ -67,17 +76,15 @@ export const Grid = () => {
 
   return (
     <div className="w-full p-[16px]" style={{ paddingLeft: `${width}px` }}>
-      <div className="relative grid" style={xStyle}>
+      <div
+        className="relative grid"
+        style={{ ...xStyle, background: `linear-gradient(90deg, #ffffff 0%, #f96b19 50%, #ffffff 100%)` }}
+      >
         {yList.map((y, i) => (
           <Fragment key={i}>
             {xList.map((x, j) => {
-              const color = Math.floor(Math.random() * 16777215).toString(16);
               return (
-                <div
-                  className="min-h-[100px] flex items-center justify-center"
-                  style={{ background: `#${color}` }}
-                  key={j}
-                >
+                <div className="min-h-[100px] flex items-center justify-center" key={j}>
                   {renderCell(x, y)}
                 </div>
               );
