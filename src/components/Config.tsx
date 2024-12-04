@@ -1,10 +1,12 @@
 
 
-import { FC, useContext } from 'react';
-import { Form, Input, Select } from 'antd';
+import { FC, useContext, useState } from 'react';
+import { Button, Form, Input, Modal, Select } from 'antd';
 import { GlobalContext } from '../hooks/useGlobal';
 import { FieldBase } from '../hooks/useTableData';
 import { metricList } from '../utils/const';
+import { bitable, dashboard } from '@lark-base-open/js-sdk';
+import { Filter } from './Filter';
 
 export interface FormParams extends FieldBase {
   tableId: string;
@@ -21,7 +23,6 @@ export const Config: FC<{}> = () => {
   } = useContext(GlobalContext);
 
   const [form] = Form.useForm<Partial<FormParams>>();
-
 
   const resolveData = async (newVal: string) => {
     const { set } = await getValueSetByField(newVal);
@@ -59,6 +60,9 @@ export const Config: FC<{}> = () => {
           ))}
         </Select>
       </Form.Item>
+
+      <Filter />
+
 
       <Form.Item label="Select X" name="x">
         <Select>
