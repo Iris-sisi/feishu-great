@@ -1,11 +1,11 @@
 export const METRIC={
     RATE:'rate',
-    PERSON:'person',
+    Value:'value',
 }
 export const metricList=[{
     value: METRIC.RATE,
     label: 'Rate',
 },{
-    value: METRIC.PERSON,
-    label: 'Person',
+    value: METRIC.Value,
+    label: 'Value',
 }]

@@ -1,3 +1,5 @@
+
+
 import { FC, useContext } from 'react';
 import { Form, Input, Select } from 'antd';
 import { GlobalContext } from '../hooks/useGlobal';
@@ -19,6 +21,7 @@ export const Config: FC<{}> = () => {
   } = useContext(GlobalContext);
 
   const [form] = Form.useForm<Partial<FormParams>>();
+
 
   const resolveData = async (newVal: string) => {
     const { set } = await getValueSetByField(newVal);
@@ -89,7 +92,7 @@ export const Config: FC<{}> = () => {
 
       {x && y && (
         <>
-          <Form.Item label="Select Key" name="key">
+          <Form.Item label="Display Field" name="key">
             <Select>
               {fieldList
                 .filter((item) => ![x, y].includes(item.value))
@@ -98,7 +101,7 @@ export const Config: FC<{}> = () => {
                 ))}
             </Select>
           </Form.Item>
-          <Form.Item label="" name="metric">
+          <Form.Item label="Display Value" name="metric">
             <Select mode="multiple">
               {metricList.map((item) => (
                 <Select.Option key={item.value}>{item.label}</Select.Option>
@@ -110,3 +113,8 @@ export const Config: FC<{}> = () => {
     </Form>
   );
 };
+
+
+
+
+

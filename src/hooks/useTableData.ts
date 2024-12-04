@@ -1,7 +1,6 @@
 import { bitable, IField, ITable } from "@lark-base-open/js-sdk";
 import { useEffect, useState } from "react";
 
-
 export interface TableData {
   source: ITable[],
   render: { value: string, label: string }[]
@@ -24,12 +23,9 @@ export interface FieldData extends Partial<FieldBase> {
   render: { value: string, label: string }[]
 }
 
-
-
 export const useTableData = () => {
   const [tableData, setTableData] = useState<TableData>({ source: [], render: [] });
   const [fieldData, setFieldData] = useState<FieldData>({ source: [], render: [] })
-
 
   const getTableList = async () => {
     const res = await bitable.base.getTableList();
@@ -100,16 +96,13 @@ export const useTableData = () => {
     setFieldData((prevValue) => ({ ...prevValue, ...newVal }))
   }
 
-
   useEffect(() => {
     getTableList()
   }, [])
 
-
   useEffect(() => {
     setTableId(tableData.currentTableId)
   }, [tableData.currentTableId])
-
 
   return {
     tableData,
