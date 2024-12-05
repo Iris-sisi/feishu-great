@@ -34,7 +34,7 @@ export const Filter = () => {
 
     return <>
         <Button onClick={handleOpenModal}>Filter </Button>
-        <Modal title="Basic Modal" open={isModalOpen} onOk={handleCloseModal} onCancel={handleCloseModal} onClose={handleCloseModal}>
+        <Modal title="Basic Modal" open={isModalOpen} onOk={handleCloseModal} onCancel={handleCloseModal} onClose={handleCloseModal} width={800}>
 
             <Form form={form} initialValues={{ items: optionList }}
                 onValuesChange={(v) => {
@@ -49,8 +49,9 @@ export const Filter = () => {
                                 <Button onClick={add}>Add</Button>
                                 {/* <Button onClick={remove}>remove</Button> */}
 
-                                {fields.map((item, index) => <div className="flex gap-[8px]" key={index}>
-                                    <Form.Item name={[item.name, 'fieldId']}>
+                                {fields.map((item, index) => <div className="flex gap-[24px] mb-[16px]" key={index}>
+                                    <Form.Item name={[item.name, 'fieldId']}
+                                    style={{minWidth: '200px'}}>
                                         <Select>
                                             {
                                                 render.map(item => {
@@ -59,7 +60,8 @@ export const Filter = () => {
                                             }
                                         </Select>
                                     </Form.Item>
-                                    <Form.Item name={[item.name, 'operator']}>
+                                    <Form.Item name={[item.name, 'operator']}
+                                    style={{minWidth: '150px'}}>
                                         <Select >
                                             {
                                                 Object.values(OPERATION).map(item => {
@@ -68,7 +70,8 @@ export const Filter = () => {
                                             }
                                         </Select>
                                     </Form.Item>
-                                    <Form.Item name={[item.name, 'value']}>
+                                    <Form.Item name={[item.name, 'value']}
+                                    style={{minWidth: '200px'}}>
                                         <Input />
                                     </Form.Item>
                                 </div>)
