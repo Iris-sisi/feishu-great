@@ -1,31 +1,11 @@
 import { bitable, IField, ITable } from "@lark-base-open/js-sdk";
 import { useEffect, useState } from "react";
-
-export interface TableData {
-  source: ITable[],
-  render: { value: string, label: string }[]
-  currentTableId?: string
-}
-
-export interface FieldItem { recordId: string; fieldId: string, value: any }
-
-export interface FieldBase {
-  x: string
-  xValue: string
-  y: string
-  yValue: string
-  key: string
-  metric: string[]
-}
-
-export interface FieldData extends Partial<FieldBase> {
-  source: IField[],
-  render: { value: string, label: string }[]
-}
+import { FieldBase, FieldData, FieldItem, FilterItem, TableData } from "../types/type";
 
 export const useTableData = () => {
   const [tableData, setTableData] = useState<TableData>({ source: [], render: [] });
   const [fieldData, setFieldData] = useState<FieldData>({ source: [], render: [] })
+  const [filters, setFilters] = useState<FilterItem[]>([])
 
   const getTableList = async () => {
     const res = await bitable.base.getTableList();
@@ -107,6 +87,8 @@ export const useTableData = () => {
   return {
     tableData,
     fieldData,
+    filters,
+    setFilters,
     getTableList,
     getDataByTable,
     getFieldListByTable,

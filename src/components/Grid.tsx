@@ -1,9 +1,11 @@
 import { Fragment, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { GlobalContext } from '../hooks/useGlobal';
 import { useRect } from '../hooks/useRect';
-import { FieldItem } from '../hooks/useTableData';
 import { useAsyncEffect } from 'ahooks';
 import { METRIC } from '../utils/const';
+import { FieldItem } from '../types/type';
+import { filterData } from '../utils/common';
+import { filter } from 'lodash-es';
 
 interface State<T = FieldItem> {
   xList: T[];
@@ -12,7 +14,7 @@ interface State<T = FieldItem> {
 }
 
 export const Grid = () => {
-  const { fieldData, delimiter, getValueSetByField } = useContext(GlobalContext);
+  const { fieldData, filters, delimiter, getValueSetByField, getValueListByField } = useContext(GlobalContext);
   const ref = useRef<HTMLDivElement | null>(null);
   const {
     rect: { width },
@@ -20,6 +22,7 @@ export const Grid = () => {
   } = useRect(ref);
   const [state, setState] = useState<State>({ xList: [], yList: [], keyList: [] });
 
+  // 坐标轴，数据
   const { xList, yList } = useMemo(() => {
     const { xValue, yValue } = fieldData;
     const resolveData = (s?: string) => {
@@ -31,16 +34,25 @@ export const Grid = () => {
     };
   }, [fieldData]);
 
+
+  // 渲染数据
   useAsyncEffect(async () => {
     const { key, x, y } = fieldData;
+    const filtersOptions = filters || []
     if (!key || !x || !y) return;
-    const [{ origin: xList }, { origin: yList }, { origin: keyList }] = await Promise.all([
+    const [{ origin: xList }, { origin: yList }, { origin: originKeyList }, filterFieldList] = await Promise.all([
       getValueSetByField(x),
       getValueSetByField(y),
       getValueSetByField(key),
+      (await Promise.all(filtersOptions.filter(f => f.fieldId).map(f => getValueListByField(f.fieldId)))).flat()
     ]);
+    const keyList = originKeyList.filter(k => {
+      const matchFilter = filterData(filterFieldList, filtersOptions)
+      if (!matchFilter.length) return true
+      return matchFilter.some(f => f.recordId === k.recordId)
+    })
     setState({ xList, yList, keyList });
-  }, [fieldData.key, fieldData.x, fieldData.y]);
+  }, [fieldData.key, fieldData.x, fieldData.y, filters]);
 
   const renderCell = (x?: string, y?: string) => {
     const { keyList, yList, xList } = state;

@@ -3,10 +3,10 @@
 import { FC, useContext, useState } from 'react';
 import { Button, Form, Input, Modal, Select } from 'antd';
 import { GlobalContext } from '../hooks/useGlobal';
-import { FieldBase } from '../hooks/useTableData';
 import { metricList } from '../utils/const';
 import { bitable, dashboard } from '@lark-base-open/js-sdk';
 import { Filter } from './Filter';
+import { FieldBase } from '../types/type';
 
 export interface FormParams extends FieldBase {
   tableId: string;
