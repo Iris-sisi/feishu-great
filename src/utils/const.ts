@@ -11,7 +11,8 @@ export const metricList = [{
 }]
 
 export enum OPERATION {
-    Equal = 'Equal',
-    NoEqual = 'NoEqual',
-    Contain = 'Contain'
+    Is = 'is',
+    ISNot = 'is not',
+    Contains = 'Contains',
+    DoesNotContain = 'does not contain'
 }
