@@ -4,7 +4,7 @@ import { FieldBase, FieldData, FieldItem, FilterItem, TableData } from "../types
 
 export const useTableData = () => {
   const [tableData, setTableData] = useState<TableData>({ source: [], render: [] });
-  const [fieldData, setFieldData] = useState<FieldData>({ source: [], render: [] })
+  const [fieldData, setFieldData] = useState<FieldData>({ source: [], render: [], tableId: '' })
   const [filters, setFilters] = useState<FilterItem[]>([])
 
   const getTableList = async () => {
@@ -27,7 +27,9 @@ export const useTableData = () => {
   }
 
   const getValueListByField = async (fieldId: string) => {
-    const field = fieldData.source.find(f => f.id === fieldId)!
+    if (!fieldData.tableId) return []
+    const table = await bitable.base.getTableById(fieldData.tableId)
+    const field = await table.getFieldById(fieldId)
     const fieldResult = await field.getFieldValueList()
     return fieldResult.reduce((prev, curr) => {
       const { record_id, value } = curr
@@ -67,6 +69,7 @@ export const useTableData = () => {
     const res = await getFieldListByTable(table)
 
     setFieldData({
+      tableId: table.id,
       source: res,
       render: await Promise.all(res.map(async r => ({ value: r.id, label: await r.getName() })))
     })
@@ -89,6 +92,8 @@ export const useTableData = () => {
     fieldData,
     filters,
     setFilters,
+    setFieldData,
+    setTableData,
     getTableList,
     getDataByTable,
     getFieldListByTable,

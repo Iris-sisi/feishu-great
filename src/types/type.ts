@@ -19,6 +19,7 @@ export interface FieldBase {
 }
 
 export interface FieldData extends Partial<FieldBase> {
+    tableId: string
     source: IField[],
     render: { value: string, label: string }[]
 }
