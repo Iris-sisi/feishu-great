@@ -67,12 +67,14 @@ export const useTableData = () => {
     }
     const table = await bitable.base.getTableById(tableId)
     const res = await getFieldListByTable(table)
+    const render = await Promise.all(res.map(async r => ({ value: r.id, label: await r.getName() })))
 
-    setFieldData({
+    setFieldData((prevValue) => ({
+      ...prevValue,
       tableId: table.id,
       source: res,
-      render: await Promise.all(res.map(async r => ({ value: r.id, label: await r.getName() })))
-    })
+      render
+    }))
   }
 
   const setField = async (newVal: Partial<FieldBase>) => {

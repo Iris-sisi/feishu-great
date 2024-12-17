@@ -12,8 +12,9 @@ export default function App() {
   const value = useTableData()
   const isView = dashboard.state === DashboardState.View
 
-  const handleConfigChange = (v: IEventCbCtx<IConfig>['data']) => {
+  const handleConfigChange = (v: IConfig) => {
     const { customConfig } = v
+    console.log(v)
     const { setFilters, setFieldData, setTableData } = value
 
     // @ts-expect-error
@@ -37,7 +38,7 @@ export default function App() {
     dashboard.getConfig().then(v => {
       handleConfigChange(v)
     });
-  }, []);
+  }, [dashboard.state]);
 
 
   const handleConfirm = () => {

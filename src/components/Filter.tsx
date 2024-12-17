@@ -7,14 +7,13 @@ import { FieldItem, FilterItem } from "../types/type";
 
 
 export const Filter = () => {
-    const { fieldData: { render }, getValueSetByField, setFilters } = useContext(GlobalContext)
+    const { fieldData: { render }, filters, getValueSetByField, setFilters } = useContext(GlobalContext)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [form] = Form.useForm<{ options: FilterItem[] }>();
     // 添加这个新的状态
     const [fieldOptions, setFieldOptions] = useState<Record<string, FieldItem[]>>({});
 
     const formValue = useWatch("options", form)
-
 
     // 添加这个新的effect
     const handleValuesChange = async (changedValues: any, allValues: any) => {
@@ -47,17 +46,23 @@ export const Filter = () => {
         setFilters(formValue)
     }, [formValue])
 
+    useEffect(() => {
+        form.setFieldsValue({ options: filters })
+    }, [filters])
+
 
     return <>
         <div className="mb-[16px]">
-            <Button onClick={handleOpenModal}>Filter</Button>
+            <div className="flex gap-[8px]">
+                <Button onClick={handleOpenModal}>Filter</Button>
 
-            {
-                Boolean(formValue?.length) && <Button onClick={() => {
-                    form.resetFields();
-                }}>clear Filter</Button>
-            }
-            {
+                {
+                    Boolean(formValue?.length) && <Button onClick={() => {
+                        form.resetFields();
+                    }}>Clear Filter</Button>
+                }
+            </div>
+            {/* {
                 formValue?.map((item, index) => {
                     return <div className="flex gap-[4px]" key={index}>
                         <span>{item.fieldId}</span>
@@ -65,11 +70,11 @@ export const Filter = () => {
                         <span>{item.value}</span>
                     </div>
                 })
-            }
+            } */}
         </div>
         <Modal title="Custom Filter" open={isModalOpen} onOk={handleCloseModal} onCancel={handleCloseModal} onClose={handleCloseModal} width={800}>
 
-            <Form form={form} initialValues={{ items: [] }}
+            <Form form={form} initialValues={{ items: filters }}
                 onValuesChange={handleValuesChange}
                 className="px-[16px]"
             >

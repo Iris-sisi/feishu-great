@@ -1,6 +1,6 @@
 
 
-import { FC, useContext, useState } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 import { Button, Form, Input, Modal, Select } from 'antd';
 import { GlobalContext } from '../hooks/useGlobal';
 import { metricList } from '../utils/const';
@@ -14,13 +14,14 @@ export interface FormParams extends FieldBase {
 
 export const Config: FC<{}> = () => {
   const {
-    tableData: { render: tableList, currentTableId },
-    fieldData: { render: fieldList, x, y },
+    tableData: { render: tableList },
+    fieldData,
     setTableId,
     setField,
     getValueSetByField,
     delimiter,
   } = useContext(GlobalContext);
+  const { render: fieldList, x, y } = fieldData
 
   const [form] = Form.useForm<Partial<FormParams>>();
 
@@ -45,11 +46,15 @@ export const Config: FC<{}> = () => {
     }
   };
 
+  useEffect(() => {
+    form.setFieldsValue(fieldData)
+  }, [fieldData])
+
   return (
     <Form
       layout="vertical"
       form={form}
-      initialValues={{ tableId: currentTableId }}
+      initialValues={fieldData}
       className="w-[300px] p-[16px]"
       onValuesChange={handleValuesChange}
     >
