@@ -104,17 +104,17 @@ export const Grid = () => {
   };
 
   return (
-    <div className="w-full p-[16px] border border-gray-400" style={{ paddingLeft: `${width}px` }}>
+    <div className="w-full h-full p-[16px] border border-gray-400 flex flex-col" style={{ paddingLeft: `${width}px` }}>
       <div
-        className="relative grid border-collapse"
+        className="relative flex-1 grid border-collapse"
         style={{ ...xStyle, background: `linear-gradient(90deg, #ffffff 0%, #f96b19 50%, #ffffff 100%)` }}
       >
         {yList.map((y, i) => (
           <Fragment key={i}>
             {xList.map((x, j) => {
               return (
-                <div className="min-h-[100px] flex items-center justify-center border border-gray-200" key={j}
-                  style={{ backgroundColor: calculateColor(j, xList.length), }}>
+                <div className="flex items-center justify-center border border-gray-200" key={j}
+                  style={{ backgroundColor: calculateColor(j, xList.length) }}>
                   {renderCell(x, y)}
                 </div>
               );
